@@ -31,10 +31,11 @@ app.use(express.json());
 
 app.get('/company-customers', (req, res) => {
     const query = `
-      SELECT c.name AS company_name, COUNT(o.id_client) AS customer_count
+      SELECT c.name AS company_name, COUNT(DISTINCT o.id_client) AS customer_count
       FROM companies c
       LEFT JOIN orders o ON c.id_company = o.id_company
       GROUP BY c.id_company, c.name
+      ORDER BY customer_count DESC
     `;
     db.query(query, (err, results) => {
       if (err) throw err;
